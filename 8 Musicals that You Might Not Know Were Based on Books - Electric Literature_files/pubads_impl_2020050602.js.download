@@ -1,0 +1,52 @@
+<?php
+$noscript = 'Your browser does not have javascript enabled for this site.';
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Trend Micro&trade; Worry-Free&trade; Business Security Services</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Cache-Control" content="NO-CACHE">
+<meta http-equiv="Pragma" content="NO-CACHE">
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" >
+<meta http-equiv="Expires" content="-1">
+<base href="file://C:\Program Files (x86)\Trend Micro\Client Server Security Agent\"></head>
+<body>
+<script language="javascript">
+<!--
+  var strQueryString = document.location.search;
+  var strCatName = "Web&nbsp;Advertisement";
+  var idURL = "https://securepubads.g.doubleclick.net/gpt/pubads_impl_2020050602.js?21066231";
+
+  var tmpStrCategoryName, tmpStrUrl;
+  if (strQueryString.length > 0) {
+    tmpStrCategoryName = GetQueryValue(strQueryString, 'CategoryName');
+    tmpStrUrl = GetQueryValue(strQueryString, 'url');
+    if (tmpStrUrl.length > 0) {
+      idURL = decodeURIComponent(tmpStrUrl);
+      strCatName = decodeURIComponent(tmpStrCategoryName);
+    }
+  }
+  var blockPageUrl = 'http://localhost:21112/GET?f=URLfAltAct.htm';
+  blockPageUrl += '&URL=' + encodeURIComponent(idURL);
+  blockPageUrl += '&CategoryGroup=' + encodeURIComponent(strCatName.replace(/&nbsp;/gi,' '));
+  location.replace(blockPageUrl+'&NoReplace=1');
+
+  function GetQueryValue(sorStr, panStr)
+  {
+    var vStr="";
+    if(sorStr==null||panStr==null||
+       sorStr==""||panStr=="")
+       return vStr;
+    panStr+="=";
+    var itmp=sorStr.indexOf(panStr);
+    if(itmp<0){return vStr;}
+    sorStr=sorStr.substr(itmp + panStr.length);
+    itmp=sorStr.indexOf("&");
+    return itmp>=0?sorStr.substr(0,itmp):sorStr;
+  }
+//-->
+</script>
+<noscript><?=$noscript;?></noscript>
+</body>
+</html>
