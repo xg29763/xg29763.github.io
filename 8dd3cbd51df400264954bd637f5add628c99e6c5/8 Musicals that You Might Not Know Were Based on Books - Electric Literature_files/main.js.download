@@ -1,0 +1,859 @@
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "/dist/";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(1);
+__webpack_require__(2);
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+var $ = jQuery.noConflict();
+
+var articleScrollTarget = "",
+    articleHeight = 0,
+    articleOffset = 0,
+    articleFeaturedImageEnd = 0,
+    windowHeight = 0;
+
+$(document).ready(function () {
+  console.log('ready? ok!');
+
+  // single product script
+  if ($('.increase-quantity').length > 0) {
+    $('.article-progress').remove();
+    $('.increase-quantity').click(function () {
+      console.log('click');
+      let thisVal = $(this).parent().find('input[type="number"]').val();
+      $(this).parent().find('input[type="number"]').val(parseInt(thisVal) + 1);
+    });
+    $('.lower-quantity').click(function () {
+      console.log('click');
+      let thisVal = $(this).parent().find('input[type="number"]').val();
+      if (thisVal - 1 >= 1) {
+        $(this).parent().find('input[type="number"]').val(thisVal - 1);
+      }
+    });
+  }
+
+  // ad script
+  if ($('body').hasClass('single')) {
+    if (jQuery('.acf-ad-block').length == 0 || jQuery('.acf-ad-block').length == 1) {
+      console.log('append ad into article');
+
+      let categories = jQuery('article').attr('categories');
+      // let middleP = [Math.round(jQuery('section.article-main > section p').length/2)];
+      console.log(categories);
+      if (categories) {
+        if (categories.includes('poem')) {
+          console.log('poem article!');
+          // jQuery('.article-footer').append(jQuery('.lower-ad-cont'));
+        } else {
+          console.log('moving!');
+
+          let adCounter = 0;
+          let adsRendered = 0;
+          let adInterval = 5;
+          const availableAdSlots = 8;
+          const minParagraphCount = 10;
+
+          if ($('main > article').attr('categories') == "recommended-reading") {
+            adInterval = 17;
+          }
+
+          $('.article-end-ad').children().remove();
+
+          if (jQuery('section.article-main > section > p').length >= minParagraphCount) {
+            jQuery('section.article-main > section > p').each(function (index) {
+              adCounter++;
+              console.log(adCounter, "mod", adCounter % adInterval);
+              if (adCounter % adInterval == 0 && adsRendered < availableAdSlots) {
+                jQuery(this).after("<div class='adContainer single-inline-ad inline_ad_" + ++adsRendered + " lower-ad-cont'><div id='dfp_block_inlinearticlead" + adsRendered + "' class='dfp_adUnit dfp_block block_type_square' data-label='inlinearticlead" + adsRendered + "' data-size='728x90' data-mobilesize='300x250'><!-- AD GOES HERE --></div></div>");
+              }
+            });
+          }
+
+          // ad appears after 5th and 12th tag
+          // jQuery('section.article-main > section > :eq(' + 4 + ')').after(jQuery('.lower-ad-cont'));
+          // jQuery('section.article-main > section > :eq(' + 11 + ')').after(jQuery('.lower-ad-cont-2'));
+        }
+      } else {
+        console.log('acf ad block used');
+      }
+    }
+  }
+  /*
+   * Navigation
+   */
+  $('.mobile-nav-toggle').click(function () {
+    console.log('mobile menu toggle');
+    $(this).toggleClass('active');
+    $('body').toggleClass('hide-overflow');
+
+    if ($('.mobile-navigation').css('display') == 'flex') {
+      $('.mobile-navigation').fadeOut();
+    } else {
+      $('.mobile-navigation').fadeIn().css('display', 'flex');
+    }
+  });
+
+  $('.mobile-nav-toggle').keypress(function () {
+    $(this).trigger('click');
+  });
+
+  $('.mobile-nav-search img, .mobile-search-close').click(function () {
+    $('.mobile-search').fadeToggle();
+  });
+
+  $('.mobile-nav-search img, .mobile-search-close').keypress(function () {
+    $(this).trigger('click');
+  });
+
+  $('.header-search-icon').click(function () {
+    $('.desktop-search').toggleClass('active');
+    $('body').toggleClass('hide-overflow');
+  });
+
+  $('.header-search-icon').keypress(function () {
+    $(this).trigger('click');
+  });
+
+  /*
+   * Gallery
+   */
+
+  jQuery(".wp-block-gallery").each(function (i, item) {
+    jQuery(this).addClass("wp-block-gallery_" + i);
+    jQuery(".wp-block-gallery_" + i).slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: true,
+      fade: true,
+      adaptiveHeight: true
+    });
+    console.log("in the gallery looper");
+  });
+
+  //DFP Scripts
+
+  var slots = {};
+  googletag.cmd.push(function () {
+    $('.dfp_block').each(function () {
+      var adData = $(this).data();
+      var adSize = adData.size.split('x');
+      if ($(window).width() < 728) {
+        adSize = adData.mobilesize.split('x');
+      }
+
+      var adCats = adData.cats;
+      console.log(adData);
+      var adLabel = adData.label;
+      slots[adLabel] = googletag.defineSlot('/21806297216/' + adData.label, [[parseInt(adSize[0]), parseInt(adSize[1])]], adLabel).addService(googletag.pubads());
+      /*
+            if(dfp_targeting.page) {
+              slots[adLabel].setTargeting('pages', dfp_targeting.page);
+            }
+      */
+
+      /*
+            if(!adCats && dfp_targeting){ // No categories were specifically provided
+              if(dfp_targeting.cats){
+                slots[adLabel].setTargeting('site-categories', dfp_targeting.cats);
+              }
+              if(dfp_targeting.browse){
+                slots[adLabel].setTargeting('browse-tags', dfp_targeting.browse);
+              }
+            }
+            else if(adCats){
+              slots[adLabel].setTargeting('site-categories', adCats);
+            }
+      */
+    });
+
+    googletag.pubads().enableSingleRequest();
+    googletag.pubads().collapseEmptyDivs(true);
+    googletag.enableServices();
+  });
+
+  check_for_ads_in_view();
+
+  /*
+   * article share toggle
+   */
+  $('.social-share-toggle').click(function () {
+    $(this).parent().parent().toggleClass('toggled');
+  });
+
+  $('.social-share-toggle').keypress(function () {
+    $(this).trigger('click');
+  });
+
+  if ($('body').hasClass('page-child')) {
+    console.log("Whattyyyyy");
+
+    if ($('.single-page-navigation-indicator')) {
+      bring_indicator_to_current();
+      $('.single-page-navigation-indicator').css('transition', '0.4s');
+    }
+
+    $('.single-page-siblings a').click(function (event) {
+      event.preventDefault();
+      if (!$(this).parent().hasClass('current_page_item')) {
+        let classes = $(this).parent().get(0).classList;
+        console.log(classes);
+        let page_id = 0;
+
+        for (let i = 0; i < classes.length; i++) {
+          if (classes[i].includes('page-item-')) {
+            page_id = classes[i].replace('page-item-', '');
+          }
+        }
+
+        console.log("getting... " + page_id);
+
+        $.ajax({
+          url: ajaxinfo.ajaxurl,
+          type: 'post',
+          data: {
+            action: 'get_page_content',
+            page_id: page_id
+          },
+          success: function (response) {
+            var responseObj = JSON.parse(response);
+
+            console.log(responseObj.content);
+
+            $('.single-page-content').html(responseObj.content);
+            $('.single-page-content').removeClass('loading');
+            setupDonationBlocks();
+
+            //console.log( responseObj.page_permalink );
+
+            //window.history.pushState({},"", responseObj.page_permalink.replace("http://",""));
+            document.title = responseObj.page_title;
+            window.history.pushState(null, responseObj.page_title, responseObj.page_permalink);
+
+            //console.log( response );
+          }
+        });
+
+        $('.single-page-siblings li').removeClass('current_page_item');
+        $(this).parent().addClass('current_page_item');
+        bring_indicator_to_current();
+        $('.single-page-content').addClass('loading');
+      }
+    });
+  }
+
+  /*
+   * Generate drop caps
+   */
+  $('.article-main section, .commuter-introduction').each(function () {
+    if ($(this).hasClass('footer-category-info') || $(this).hasClass('footer-attribution') || $(this).hasClass('footer-category-info') || $(this).hasClass('article-footer-blurb')) {} else {
+      put_drop_cap($(this));
+    }
+  });
+
+  if ($('.has-drop-cap').length) {
+    $('.has-drop-cap').each(function () {
+      wrap_drop_cap_span($(this));
+    });
+  }
+
+  if ($('.article-progress').length && !$('body').hasClass('single-el-author')) {
+    articleScrollTarget = $('.article-progress').data('target');
+    articleHeight = $('#' + articleScrollTarget).height();
+    articleFeaturedImageEnd = $('#' + articleScrollTarget + ' .article-featured-image').height() + $('#' + articleScrollTarget + ' .article-featured-image').offset().top;
+    articleOffset = $('#' + articleScrollTarget).offset().top;
+
+    $('#' + articleScrollTarget + ' img').load(function () {
+      articleFeaturedImageEnd = $('#' + articleScrollTarget + ' .article-featured-image').height() + $('#' + articleScrollTarget + ' .article-featured-image').offset().top;
+      articleHeight = $('#' + articleScrollTarget).height();
+    }).each(function () {
+      if (this.complete) {
+        $(this).trigger('load');
+      }
+    });
+  }
+
+  windowHeight = window.innerHeight;
+  console.log(windowHeight);
+
+  /*
+   * Homepage functions
+   */
+  if ($('body').hasClass('home')) {
+    if ($(window).width() < 767) {
+      $('.homepage-lower-posts-boxes, .home-lit-mags-articles .content-margins').slick({
+        centerMode: true,
+        infinte: false,
+        arrows: false,
+        dots: true
+      });
+    }
+
+    let offset = ($('.single-page-siblings .current_page_item').width() - $('.single-page-navigation-indicator').width()) / 2 + $('.single-page-siblings .current_page_item').offset().left;
+    $('.single-page-navigation-indicator').css('transform', 'translateX(' + offset + 'px)');
+
+    $('.single-page-siblings a').click(function () {
+      let $this = $(this).parent();
+      if ($this.hasClass('current_page_item')) {
+        return false;
+      } else {
+        $this.parent().find('li').removeClass('current_page_item');
+        $this.addClass('current_page_item');
+        $('.home-selected-cat-posts-cont').fadeOut();
+        $('.home-selected-cat-posts-cont[catid="' + $this.attr("catid") + '"]').fadeIn().css('display', 'flex');
+
+        offset = ($('.single-page-siblings .current_page_item').width() - $('.single-page-navigation-indicator').width()) / 2 + $('.single-page-siblings .current_page_item').offset().left;
+        $('.single-page-navigation-indicator').css('transform', 'translateX(' + offset + 'px)');
+      }
+    });
+
+    $('.home-auth-cont-imgs-mobile').click(function () {
+      let $this = $(this);
+      if ($this.hasClass('active')) {
+        return false;
+      }
+      $('.home-auth-cont-imgs-mobile').removeClass('active');
+      $this.addClass('active');
+      $('.home-feat-authors-arts-mobile-info').fadeOut();
+      setTimeout(function () {
+        $('.home-feat-authors-arts-mobile-info[key="' + $this.attr('key') + '"]').fadeIn();
+      }, 400);
+    });
+  }
+
+  if ($(window).width() < 767) {
+    $('.more-like-this-posts .content-margins').slick({
+      centerMode: true,
+      infinte: false,
+      arrows: false,
+      dots: true
+    });
+  }
+
+  /*
+   * RESIZING FUNCTIONS
+   */
+  $(window).resize(function () {
+    if ($('body').hasClass('home')) {
+
+      let offset = ($('.single-page-siblings .current_page_item').width() - $('.single-page-navigation-indicator').width()) / 2 + $('.single-page-siblings .current_page_item').offset().left;
+      $('.single-page-navigation-indicator').css('transform', 'translateX(' + offset + 'px)');
+
+      if ($(window).width() < 767) {
+        $('.homepage-lower-posts .homepage-lower-posts-boxes, .home-lit-mags-articles .content-margins').slick({
+          centerMode: true,
+          infinte: false,
+          arrows: false,
+          dots: true
+        });
+      } else {
+        $('.homepage-lower-posts .homepage-lower-posts-boxes, .home-lit-mags-articles .content-margins').slick('unslick');
+      }
+    }
+
+    if ($('body').hasClass('single')) {
+      if ($(window).width() < 767) {
+        $('.more-like-this-posts .content-margins').slick({
+          centerMode: true,
+          infinte: false,
+          arrows: false,
+          dots: true
+        });
+      } else {
+        $('.more-like-this-posts .content-margins').slick('unslick');
+      }
+    }
+  });
+
+  /*
+   * Search AJAX
+   */
+  if ($('body').hasClass('search-results')) {
+    $('.whisker-button').click(function (event) {
+      event.preventDefault();
+
+      let searchQuery = $(this).data('query');
+      let queryPage = $(this).data('page');
+
+      if (queryPage == 0) {
+        queryPage = 1;
+      }
+
+      let thisRef = $(this);
+
+      $.ajax({
+        url: ajaxinfo.ajaxurl,
+        type: 'post',
+        data: {
+          action: 'get_search_results',
+          query: searchQuery,
+          page: queryPage
+        },
+        success: function (response) {
+          let responseObj = JSON.parse(response);
+          console.log(responseObj);
+          console.log(thisRef);
+
+          $('.search-results-feed').html($('.search-results-feed').html() + responseObj.content);
+
+          console.log(responseObj.page);
+
+          if (responseObj.more) {
+            thisRef.data('page', responseObj.page);
+          } else {
+            thisRef.remove();
+          }
+        }
+      });
+    });
+  }
+
+  /*
+   * Archive AJAX
+   */
+  if ($('.lit-mags-show-more').length) {
+    $('.lit-mags-show-more a').click(function (event) {
+      event.preventDefault();
+
+      let queryPage = $(this).data('page');
+      console.log(queryPage);
+      let category = $(this).data('category');
+      console.log(category);
+      let postsnum = $(this).data('postsper');
+      console.log(postsnum);
+      let exclude = $(this).data('not');
+      console.log(exclude);
+
+      if (queryPage == 0) {
+        queryPage = 1;
+      }
+
+      let thisRef = $(this);
+
+      $.ajax({
+        url: ajaxinfo.ajaxurl,
+        type: 'post',
+        data: {
+          action: 'get_archive_feed',
+          page: queryPage,
+          category: category,
+          not: JSON.stringify(exclude),
+          postsper: postsnum
+        },
+        success: function (response) {
+          let responseObj = JSON.parse(response);
+          console.log(responseObj);
+          console.log(thisRef);
+
+          thisRef.removeClass('loading');
+          thisRef.text('Show more');
+
+          //$('.lit-mags-feed .content-margins').html(  $('.lit-mags-feed .content-margins').html() + responseObj.content );
+          $('.lit-mags-feed .content-margins').append(responseObj.content);
+
+          if (responseObj.more) {
+            thisRef.data('page', responseObj.page);
+          } else {
+            thisRef.remove();
+          }
+        }
+      });
+
+      $(this).addClass('loading');
+      $(this).text('Loading...');
+    });
+  }
+
+  /*
+   * Smooth article jump
+   */
+  if ($('.commuter-jump a').length) {
+    $('.commuter-jump a').click(function () {
+      let target = $(this).attr('href');
+      let curHeight = $(window).scrollTop();
+      let offsetHeight = $(target).offset().top - 120;
+
+      let duration = (offsetHeight - curHeight) / 800 * 1000;
+      if (duration > 1200) {
+        duration = 1200;
+      }
+
+      $('html,body').animate({
+        scrollTop: offsetHeight
+      }, duration);
+    });
+  }
+
+  // CATEGORY ARCHIVE PAGES
+  if ($('body').hasClass('category')) {
+    $('.show-more-button .whisker-button').click(function () {
+      console.log('ajax click!');
+      let $this = $(this);
+      $this.addClass('loading');
+      $this.text('Loading...');
+
+      let offset = $this.attr('offset');
+      let catID = $this.attr('catID');
+
+      console.log(catID, offset);
+
+      $.ajax({
+        url: ajaxinfo.ajaxurl,
+        type: 'post',
+        data: {
+          action: 'get_more_posts',
+          offset: offset,
+          catID: catID
+        },
+        success: function (response) {
+          var responseObj = JSON.parse(response);
+          if (responseObj != null) {
+            $this.attr('offset', parseInt(offset) + 9);
+            // console.log( responseObj );
+            responseObj.forEach(function (elem) {
+              console.log(elem);
+
+              let article = `
+                  <article class="post-box">
+          					<a href="` + elem.link + `">
+                      <div class="post-box-info">
+                        <h2>` + elem.title + `</h2>
+                        <!-- <p><h4><em>Whiteface in literature isn’t a disavowal of Blackness, but a commentary on privilege</em></h4></p> -->
+                        <!-- temp without tags -->
+                        <p>` + elem.dek + `</p>
+                        <div class="post-box-lower">
+                          ` + elem.date + ` - <span>` + elem.author + `</span>
+                        </div>
+                      </div>
+                      <div class="post-box-image">
+                        <span class="post-box-category">` + elem.category[0].name + `</span>
+                        <img src="` + elem.img + `" alt=""/>
+                      </div>
+                    </a>
+  		            </article>
+                  `;
+              // console.log(article);
+              $('.category-landing-feed').append(article);
+              $this.removeClass('loading');
+              $this.text('Show more');
+            });
+          } else {
+            console.log('no more posts?');
+            // $('.lit-mags-show-more').hide();
+            $('.show-more-button').hide();
+          }
+        }
+      });
+    });
+  }
+
+  $('#newsletter-popup input[type="submit"]').click(function (e) {
+    e.preventDefault();
+    console.log('submission');
+    mailChimpAjax($('#newsletter-email').val());
+  });
+
+  $('#newsletter-popup .newsletter-close').click(function () {
+    $('#newsletter-popup').removeClass('active');
+    // setCookie('hidepopup', true, 365);
+  });
+
+  // if(!getCookie('hidepopup')){
+  //   setTimeout(function(){
+  //     $('#newsletter-popup').addClass('active');
+  //   }, 1500);
+  // }
+  //
+  // function setCookie(cname, cvalue, exdays) {
+  //   var d = new Date();
+  //   d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  //   var expires = "expires="+ d.toUTCString();
+  //   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  // }
+  //
+  // function getCookie(cname) {
+  //   var name = cname + "=";
+  //   var decodedCookie = decodeURIComponent(document.cookie);
+  //   var ca = decodedCookie.split(';');
+  //   for(var i = 0; i <ca.length; i++) {
+  //     var c = ca[i];
+  //     while (c.charAt(0) == ' ') {
+  //       c = c.substring(1);
+  //     }
+  //     if (c.indexOf(name) == 0) {
+  //       return c.substring(name.length, c.length);
+  //     }
+  //   }
+  //   return "";
+  // }
+
+  function mailChimpAjax(emailAddr) {
+    console.log('mail chimp func');
+    var returnMessage = "Oops, something went wrong!";
+    $.ajax({
+      url: templateurl + '/mail/signup.php',
+      data: {
+        nlEmail: emailAddr
+      },
+      success: function (data) {
+        console.log(data);
+        if (data) {
+          var mailreturn = $.parseJSON(data);
+          if (mailreturn) {
+            console.log(mailreturn);
+            switch (mailreturn.title) {
+              case 'Member Exists':
+                returnMessage = "Already Subscribed";
+                break;
+              default:
+                returnMessage = "Something Went Wrong";
+                break;
+            }
+            console.log(mailreturn.title);
+            if (mailreturn.status == 'subscribed') {
+              // setCookie('hidepopup', true, 365);
+              // $('#newsletter-popup').css('height', ($('#newsletter-popup').height() + 80) + 'px');
+              $('.newsletter-initial').fadeOut();
+              setTimeout(function () {
+                // $('#newsletter-popup').css('height', 'auto');
+                $('#newsletter-popup').addClass('success');
+                $('.newsletter-content').css('max-width', '800px');
+                $('.newsletter-succcess').fadeIn();
+                $('.newsletter-success-thanks').fadeIn().css('display', 'flex');
+              }, 400);
+            } else {
+              $('.newsletter-content .newsletter-initial').addClass('error');
+              $('.newsletter-content input[type="text"]').removeAttr('value');
+              $('.newsletter-content input[type="text"]').attr('placeholder', returnMessage);
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function confirmSignup(id) {
+    $('#confirm_' + id).fadeIn();
+    $('.confirmSignupClose, .confirmContainer').click(function () {
+      $('.confirmSignup').fadeOut();
+    });
+  }
+
+  $('.sidebar-block-circle-wrapper .subscribe-sidebar-circle a, .sidebar-block block_recommended-reading-subscribe a, .sidebar-block block_the-commuter-subscribe, a.trigger-newsletter').click(function (e) {
+    e.preventDefault();
+
+    $('#newsletter-popup').addClass('active');
+  });
+
+  //setupDonation Block UI/UX
+  setupDonationBlocks();
+
+  $('.showLogin').click(function (e) {
+    e.preventDefault();
+    $('.woocommerce-form-login').slideToggle();
+  });
+});
+
+console.log("helloooooo");
+//function to setup buttons for donation block
+
+function setupDonationBlocks() {
+  console.log("setting up donation blocks");
+  $('a.donate-amt-box.name-your-price').click(function (e) {
+    e.preventDefault();
+
+    const prod = $(this).attr('data-variation');
+    if ($('#add-to-cart-' + prod).attr('checked')) {
+      $('#add-to-cart-' + prod).attr('checked', false);
+      $('.donate-name-your-price-section').slideUp();
+    } else {
+      $('#add-to-cart-' + prod).attr('checked', true);
+      $('.donate-name-your-price-section').slideDown();
+    }
+  });
+}
+
+/*
+ * Window scroll functions
+ */
+$(window).scroll(function () {
+  let scrollTop = $(window).scrollTop();
+  //console.log( scrollTop );
+  /*
+   * Article progress
+   */
+  if ($('.article-progress').length && !$('body').hasClass('single-el-author')) {
+    if (scrollTop > articleFeaturedImageEnd) {
+      $('.article-progress').show();
+      let perScrolled = 0;
+
+      let articleScrolled = scrollTop - articleOffset - articleFeaturedImageEnd;
+
+      perScrolled = articleScrolled / (articleHeight - (articleFeaturedImageEnd - articleOffset)) * 100;
+
+      //console.log( perScrolled );
+
+      $('.article-progress-indicator').css('width', perScrolled + "%");
+      $('#article-progress-num').text(Math.min(Math.ceil(perScrolled), 100));
+    } else {
+      $('.article-progress').hide();
+    }
+  }
+});
+
+$(window).resize(function () {
+  if ($('.article-progress').length && !$('body').hasClass('single-el-author')) {
+    articleScrollTarget = $('.article-progress').data('target');
+    articleHeight = $('#' + articleScrollTarget).height();
+    articleFeaturedImageEnd = $('#' + articleScrollTarget + ' .article-featured-image').height() + $('#' + articleScrollTarget + ' .article-featured-image').offset().top;
+    articleOffset = $('#' + articleScrollTarget).offset().top;
+  }
+});
+
+function bring_indicator_to_current() {
+  let indicator = $('.single-page-navigation-indicator');
+  let cur = $('.single-page-siblings .current_page_item a');
+
+  let newWidth = cur.width() + 48;
+  if ($(window).width() < 920) {
+    newWidth = newWidth - 3;
+  }
+  let newOffset = cur.offset().left - $('.single-page-navigation .content-margins').eq(0).offset().left;
+
+  indicator.css('width', newWidth + 'px');
+  indicator.css('left', newOffset + 'px');
+}
+
+function put_drop_cap($container) {
+  let paragraph = $container.find('p');
+  let firstParagraph;
+  paragraph.each(function () {
+    if ($(this).parent().attr('class') != 'article-author-deck' && !$(this).parent().hasClass('adContainer')) {
+      firstParagraph = $(this);
+      return false;
+    }
+  });
+
+  wrap_drop_cap_span(firstParagraph);
+}
+
+function wrap_drop_cap_span($paragraph) {
+
+  if ($paragraph != null) {
+    let content = $paragraph.html();
+    content = content.replace(/^[^a-zA-Z'"<]*([a-zA-Z])/g, '<span class="drop-cap">$1</span>');
+    $paragraph.html(content);
+    $paragraph.addClass('has-dropcap');
+  }
+}
+
+//DFP Ads
+$(window).scroll(function () {
+  check_for_ads_in_view();
+});
+var autoscroll = false;
+function check_for_ads_in_view() {
+  console.log("checking for ads");
+  if ($('.dfp_block').length > 0) {
+    $('.dfp_block').each(function () {
+      if ($(window).scrollTop() + $(window).height() + 100 > $(this).offset().top && !$(this).hasClass('rendered') && $(window).scrollTop() - 300 < $(this).offset().top && !autoscroll) {
+        console.log("getting The Ad");
+
+        var adData = $(this).data();
+        var adId = adData.label;
+        get_dfp_by_tag(adId);
+        $(this).addClass('rendered');
+      }
+    });
+  }
+}
+
+function get_dfp_by_tag(tag) {
+  if ($('#' + tag).length < 1) {
+    $('#dfp_block_' + tag).append("<div id='" + tag + "'></div>");
+    googletag.cmd.push(function () {
+      googletag.display(tag);
+    });
+    console.log('getting Ads ' + tag);
+    console.log(googletag);
+  }
+}
+
+/***/ })
+/******/ ]);
+//# sourceMappingURL=main.js.map
